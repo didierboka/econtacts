@@ -2,7 +2,7 @@
 //  ContactDetailsViewController.swift
 //  E-Contacts
 //
-//  Created by M. Didier BOKA on 05/12/2024.
+//  Created by M. Didier BOKA on 04/12/2024.
 //
 
 import Foundation
@@ -132,25 +132,42 @@ class ContactDetailViewController: UIViewController {
             titleLabel.textAlignment = .center  // Centré
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
             
-            let valueLabel = UILabel()
-            valueLabel.text = value
-            valueLabel.font = .systemFont(ofSize: 17)
-            valueLabel.numberOfLines = 0
-            valueLabel.textAlignment = .center  // Centré
-            valueLabel.translatesAutoresizingMaskIntoConstraints = false
+            // Créer soit un label cliquable soit un label normal
+                let valueView: UIView
+                if title == "Téléphone fixe" || title == "Téléphone mobile" {
+                    let button = UIButton(type: .system)
+                    button.setTitle(value, for: .normal)
+                    button.titleLabel?.font = .systemFont(ofSize: 17)
+                    button.titleLabel?.numberOfLines = 0
+                    button.titleLabel?.textAlignment = .center
+                    button.addTarget(self, action: #selector(phoneNumberTapped(_:)), for: .touchUpInside)
+                    // Stocker le numéro de téléphone dans le tag du bouton
+                    button.accessibilityIdentifier = value
+                    valueView = button
+                } else {
+                    let label = UILabel()
+                    label.text = value
+                    label.font = .systemFont(ofSize: 17)
+                    label.numberOfLines = 0
+                    label.textAlignment = .center
+                    valueView = label
+                }
             
-            container.addSubview(titleLabel)
-            container.addSubview(valueLabel)
+            
+            valueView.translatesAutoresizingMaskIntoConstraints = false
+               
+           container.addSubview(titleLabel)
+           container.addSubview(valueView)
             
             NSLayoutConstraint.activate([
                 titleLabel.topAnchor.constraint(equalTo: container.topAnchor),
                 titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
                 titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
                 
-                valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-                valueLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-                valueLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-                valueLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+                valueView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+                valueView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                valueView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                valueView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
             ])
             
             // Ajouter une ligne de séparation
@@ -179,5 +196,43 @@ class ContactDetailViewController: UIViewController {
         }
     
     
+    
+    @objc private func phoneNumberTapped(_ sender: UIButton) {
+        // showToast(message: "Bientôt disponible"
+        
+        /*guard let phoneNumber = sender.accessibilityIdentifier else { return }
+        
+        // Nettoyer le numéro de téléphone (enlever les espaces et caractères spéciaux)
+        let cleanNumber = phoneNumber.replacingOccurrences(of: "[^0-9+]", with: "", options: .regularExpression)
+        
+        // Créer l'URL pour l'appel
+        if let phoneURL = URL(string: "tel://\(cleanNumber)") {
+            // Vérifier si le dispositif peut faire des appels
+            if UIApplication.shared.canOpenURL(phoneURL) {
+                // Créer une alerte de confirmation
+                let alert = UIAlertController(
+                    title: "Appeler le \(sender.titleLabel?.text ?? "numéro")?",
+                    message: nil,
+                    preferredStyle: .actionSheet
+                )
+                
+                // Action d'appel
+                alert.addAction(UIAlertAction(title: "Appeler", style: .default) { _ in
+                    UIApplication.shared.open(phoneURL)
+                })
+                
+                // Action d'annulation
+                alert.addAction(UIAlertAction(title: "Annuler", style: .cancel))
+                
+                // Pour iPad
+                if let popoverController = alert.popoverPresentationController {
+                    popoverController.sourceView = sender
+                    popoverController.sourceRect = sender.bounds
+                }
+                
+                present(alert, animated: true)
+            }
+        }*/
+    }
     
 }

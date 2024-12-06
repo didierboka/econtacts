@@ -111,6 +111,17 @@ enum PostalCode: Codable {
         }
     }
     
+    // Ajout d'un initialiseur avec String
+    init(_ value: String) {
+        self = .string(value)
+    }
+    
+    
+    // Ajout d'un initialiseur avec Int
+    init(_ value: Int) {
+        self = .int(value)
+    }
+    
     // After parse transform to String
     var stringValue: String {
         switch self {

@@ -147,7 +147,7 @@ class ContactViewController: UIViewController {
     }
     
     
-    private func showToast(message: String) {
+    func showToast(message: String) {
         let toastContainer = UIView()
         toastContainer.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         toastContainer.alpha = 0.0
