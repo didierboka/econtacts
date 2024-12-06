@@ -12,12 +12,10 @@ import UIKit
 class ContactViewController: UIViewController {
     
     
-    // MARK: - Properties
     private let viewModel = ContactViewModels()
     private let searchController = UISearchController(searchResultsController: nil)
     
     
-    // MARK: - UI Elements
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +40,6 @@ class ContactViewController: UIViewController {
     }()
     
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -51,7 +48,6 @@ class ContactViewController: UIViewController {
     }
     
     
-    // MARK: - Setup
     private func setupUI() {
         // Configure navigation
         title = "E-Contacts"
@@ -62,7 +58,8 @@ class ContactViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Recherche"
         navigationItem.searchController = searchController
-        // Important: ces deux lignes sont nécessaires
+        
+        // For logic view search
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
         
@@ -112,8 +109,9 @@ class ContactViewController: UIViewController {
         viewModel.onError = { [weak self] error in
             self?.refreshControl.endRefreshing()
             let alert = UIAlertController(title: "Erreur",
-                                        message: error.localizedDescription,
-                                        preferredStyle: .alert)
+                                          message: error.localizedDescription,
+                                          preferredStyle: .alert)
+            
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self?.present(alert, animated: true)
         }
@@ -128,7 +126,6 @@ class ContactViewController: UIViewController {
     }
     
     
-    // MARK: - Actions
     private func loadContacts() {
         viewModel.loadInitialContacts()
     }
@@ -193,10 +190,10 @@ class ContactViewController: UIViewController {
 }
 
 
-// MARK: - UITableViewDataSource
+
 extension ContactViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.filteredContacts.count // Utiliser filteredContacts
+        return viewModel.filteredContacts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -204,14 +201,14 @@ extension ContactViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let contact = viewModel.filteredContacts[indexPath.row] // Utiliser filteredContacts
+        let contact = viewModel.filteredContacts[indexPath.row] // filter logic
         cell.configure(with: contact)
         return cell
     }
 }
 
 
-// MARK: - UITableViewDelegate
+
 extension ContactViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
@@ -219,7 +216,7 @@ extension ContactViewController: UITableViewDelegate {
         let screenHeight = scrollView.bounds.size.height
         
         if position > contentHeight - screenHeight - (screenHeight * 0.1) {
-            // Ne charger plus que si on n'est pas en train de rechercher
+            // Don't load when search
             if searchController.searchBar.text?.isEmpty ?? true {
                 viewModel.loadMoreIfNeeded(currentIndex: viewModel.contacts.count - 1)
             }

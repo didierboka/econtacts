@@ -13,10 +13,10 @@ class ContactDetailViewController: UIViewController {
     
     
 
-    // MARK: - Properties
+
         private let contact: ContactModel
         
-        // MARK: - UI Elements
+
         private let scrollView: UIScrollView = {
             let scrollView = UIScrollView()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +33,7 @@ class ContactDetailViewController: UIViewController {
             let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.layer.cornerRadius = 60  // Augmenté pour une plus grande image
+            imageView.layer.cornerRadius = 60
             imageView.backgroundColor = .systemGray5
             imageView.translatesAutoresizingMaskIntoConstraints = false
             return imageView
@@ -42,13 +42,13 @@ class ContactDetailViewController: UIViewController {
         private lazy var stackView: UIStackView = {
             let stack = UIStackView()
             stack.axis = .vertical
-            stack.spacing = 20  // Augmenté pour plus d'espacement
-            stack.alignment = .center  // Centre les éléments horizontalement
+            stack.spacing = 20
+            stack.alignment = .center
             stack.translatesAutoresizingMaskIntoConstraints = false
             return stack
         }()
         
-        // MARK: - Initialization
+    
         init(contact: ContactModel) {
             self.contact = contact
             super.init(nibName: nil, bundle: nil)
@@ -58,14 +58,14 @@ class ContactDetailViewController: UIViewController {
             fatalError("init(coder:) has not been implemented")
         }
         
-        // MARK: - Lifecycle
+    
         override func viewDidLoad() {
             super.viewDidLoad()
             setupUI()
             configureWithContact()
         }
         
-        // MARK: - Setup
+    
         private func setupUI() {
             view.backgroundColor = .systemBackground
             
@@ -88,7 +88,7 @@ class ContactDetailViewController: UIViewController {
                 
                 profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
                 profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-                profileImageView.widthAnchor.constraint(equalToConstant: 120),  // Plus grande image
+                profileImageView.widthAnchor.constraint(equalToConstant: 120),
                 profileImageView.heightAnchor.constraint(equalToConstant: 120),
                 
                 stackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 32),
@@ -101,7 +101,6 @@ class ContactDetailViewController: UIViewController {
         private func configureWithContact() {
             title = contact.name.fullName
             
-            // Load profile image
             if let url = URL(string: contact.picture.large) {
                 URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                     if let data = data, let image = UIImage(data: data) {
@@ -131,8 +130,8 @@ class ContactDetailViewController: UIViewController {
             titleLabel.textColor = .secondaryLabel
             titleLabel.textAlignment = .center  // Centré
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Créer soit un label cliquable soit un label normal
+                
+                // for call number (clicable)
                 let valueView: UIView
                 if title == "Téléphone fixe" || title == "Téléphone mobile" {
                     let button = UIButton(type: .system)
@@ -141,7 +140,7 @@ class ContactDetailViewController: UIViewController {
                     button.titleLabel?.numberOfLines = 0
                     button.titleLabel?.textAlignment = .center
                     button.addTarget(self, action: #selector(phoneNumberTapped(_:)), for: .touchUpInside)
-                    // Stocker le numéro de téléphone dans le tag du bouton
+                    // Lock number info on identifier tag button
                     button.accessibilityIdentifier = value
                     valueView = button
                 } else {
@@ -170,7 +169,6 @@ class ContactDetailViewController: UIViewController {
                 valueView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
             ])
             
-            // Ajouter une ligne de séparation
             let separator = UIView()
             separator.backgroundColor = .systemGray5
             separator.translatesAutoresizingMaskIntoConstraints = false
@@ -197,15 +195,14 @@ class ContactDetailViewController: UIViewController {
     
     
     
+    // Adding call logic ...
     @objc private func phoneNumberTapped(_ sender: UIButton) {
         // showToast(message: "Bientôt disponible"
         
         /*guard let phoneNumber = sender.accessibilityIdentifier else { return }
         
-        // Nettoyer le numéro de téléphone (enlever les espaces et caractères spéciaux)
         let cleanNumber = phoneNumber.replacingOccurrences(of: "[^0-9+]", with: "", options: .regularExpression)
         
-        // Créer l'URL pour l'appel
         if let phoneURL = URL(string: "tel://\(cleanNumber)") {
             // Vérifier si le dispositif peut faire des appels
             if UIApplication.shared.canOpenURL(phoneURL) {

@@ -29,7 +29,7 @@ class NetworkMonitorService {
                 let wasConnected = self?.isConnected ?? false
                 self?.isConnected = path.status == .satisfied
                 
-                // Notifier si la connexion est rétablie
+                // When network done
                 if !wasConnected && self?.isConnected == true {
                     self?.onConnectionRestored?()
                 }

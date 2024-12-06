@@ -12,11 +12,10 @@ import UIKit
 class ContactItemView: UITableViewCell {
     
     
-    // MARK: - Properties
     static let identifier = "ContactItemView"
     
     
-    // MARK: - UI Elements
+    
     private let contactImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -45,7 +44,6 @@ class ContactItemView: UITableViewCell {
     }()
     
     
-    // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -57,7 +55,7 @@ class ContactItemView: UITableViewCell {
     }
     
     
-    // MARK: - Setup
+
     private func setupUI() {
         contentView.addSubview(contactImageView)
         contentView.addSubview(nameLabel)
@@ -80,7 +78,6 @@ class ContactItemView: UITableViewCell {
     }
     
     
-    // MARK: - Configuration
     func configure(with contact: ContactModel) {
         nameLabel.text = contact.name.fullName
         emailLabel.text = contact.email

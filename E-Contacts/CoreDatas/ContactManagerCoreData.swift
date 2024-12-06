@@ -15,7 +15,7 @@ class ContactManagerCoreData {
     static let shared = ContactManagerCoreData()
     
     
-    // MARK: - Core Data stack
+
     private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "ContactModelCoreData")
         container.loadPersistentStores { description, error in
@@ -32,16 +32,16 @@ class ContactManagerCoreData {
     
     private init() {}
     
-    // MARK: - CRUD Operations
+
     func saveContact(_ contact: ContactModel) throws {
         let fetchRequest: NSFetchRequest<ContactEntity> = ContactEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "email == %@", contact.email)
         
-        // Vérifier si le contact existe déjà
+        // Check if exist
         let existingContact = try? context.fetch(fetchRequest).first
         let contactEntity = existingContact ?? ContactEntity(context: context)
         
-        // Mettre à jour les données
+        // Update data
         contactEntity.email = contact.email
         contactEntity.phone = contact.phone
         contactEntity.cell = contact.cell
@@ -49,16 +49,13 @@ class ContactManagerCoreData {
         contactEntity.lastName = contact.name.last
         contactEntity.pictureUrl = contact.picture.large
         
-        // Adresse
         contactEntity.street = "\(contact.location.street.number) \(contact.location.street.name)"
         contactEntity.city = contact.location.city
         contactEntity.state = contact.location.state
         contactEntity.country = contact.location.country
         contactEntity.postcode = contact.location.postcode.stringValue
         
-        // Métadonnées
         contactEntity.lastUpdated = Date()
-        
         try context.save()
     }
     
@@ -91,8 +88,10 @@ class ContactManagerCoreData {
     }
 }
 
-// MARK: - Contact Entity Extension
+
 extension ContactEntity {
+    
+    // Convert Entity to Model
     func toContactModel() -> ContactModel {
         let name = NameModel(
             title: "",

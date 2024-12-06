@@ -10,7 +10,8 @@ import Foundation
 
 
 class ContactViewModels {
-    // MARK: - Properties
+    
+    
     private(set) var contacts: [ContactModel] = []
     private(set) var filteredContacts: [ContactModel] = []
     private var currentPage = 0
@@ -21,14 +22,16 @@ class ContactViewModels {
     private let coreDataManager = ContactManagerCoreData.shared
     private let networkMonitor = NetworkMonitorService.shared
     
-    // MARK: - Closures
+    
     var onContactsFetched: (() -> Void)?
     var onError: ((Error) -> Void)?
     var onLoading: ((Bool) -> Void)?
     
+    
     init() {
         setupNetworkMonitoring()
     }
+    
     
     private func setupNetworkMonitoring() {
         networkMonitor.onConnectionRestored = { [weak self] in
@@ -38,7 +41,8 @@ class ContactViewModels {
         }
     }
     
-    // MARK: - Methods
+    
+    
     func loadInitialContacts() {
         guard !isLoading else { return }
         currentPage = 0
@@ -47,14 +51,15 @@ class ContactViewModels {
         hasMoreData = true
         currentSearchText = ""
         
-        // Charger d'abord les données locales
+        // Load caches
         loadLocalContacts()
         
-        // Si en ligne, charger les données fraîches
+        // When online load remote datas
         if networkMonitor.isConnected {
             fetchContacts(count: pageSize)
         }
     }
+    
     
     private func loadLocalContacts() {
         do {
@@ -137,6 +142,7 @@ class ContactViewModels {
             onError?(error)
         }
     }
+    
     
     private func handleDecodingError(_ error: DecodingError) {
         print("🔴 Erreur de décodage détaillée:", error)
