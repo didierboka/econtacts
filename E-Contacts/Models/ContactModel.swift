@@ -49,8 +49,6 @@ struct NameModel: Codable {
     }
 }
 
-// The data couldn't be read because it isn't in the correct format
-
 
 // MARK: - Location
 struct LocationModel: Codable {
@@ -90,7 +88,7 @@ struct PictureModel: Codable {
 }
 
 
-// Ajoutons ce type personnalisé pour gérer les deux formats de code postal
+// Enum for parse PostalCode can be a String or an Int
 enum PostalCode: Codable {
     case string(String)
     case int(Int)
@@ -113,7 +111,18 @@ enum PostalCode: Codable {
         }
     }
     
-    // Pour obtenir la valeur sous forme de string
+    // Ajout d'un initialiseur avec String
+    init(_ value: String) {
+        self = .string(value)
+    }
+    
+    
+    // Ajout d'un initialiseur avec Int
+    init(_ value: Int) {
+        self = .int(value)
+    }
+    
+    // After parse transform to String
     var stringValue: String {
         switch self {
         case .string(let value): return value
